@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Lint, Test and Build test (Node ${{ matrix.node-version }})
+      - name: Lint, Test Code and Test Build on Node.js ${{ matrix.node-version }}
         run: |
           npm ci
           npm run lint
@@ -48,12 +48,12 @@ jobs:
         with:
           node-version: '12.x'
 
-      - name: Build for Node ${{ matrix.node-version }}
+      - name: Build for Node.js ${{ matrix.node-version }}
         run: |
           npm ci
           npm run build
 
-      - name: Publish build for Node ${{ matrix.node-version }}
+      - name: Publish build to NPM registry
         uses: mikeal/merge-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
