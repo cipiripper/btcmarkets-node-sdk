@@ -50,6 +50,7 @@ jobs:
           node-version: '12.x'
       - name: Build for Node ${{ matrix.node-version }}
         run: |
+          npm ci
           npm run build --if-present
 
       - name: Publish build for Node ${{ matrix.node-version }}
