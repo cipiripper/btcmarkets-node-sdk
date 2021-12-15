@@ -11,37 +11,49 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [8.x, 10.x, 12.x, 13.x]
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm i
-        npm run lint
-        npm run test
-        npm run build --if-present
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Lint, Test and Build test (Node ${{ matrix.node-version }})
+        run: |
+          npm ci
+          npm run lint
+          npm run test
+          npm run build --if-present
 
   publish:
-    needs: [build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout the code
+        uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - uses: actions/setup-node@v1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
         with:
+          registry-url: 'https://registry.npmjs.org'
           node-version: '12.x'
-      - name: Publish
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Build for Node ${{ matrix.node-version }}
+        run: |
+          npm run build --if-present
+
+      - name: Publish build for Node ${{ matrix.node-version }}
         uses: mikeal/merge-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

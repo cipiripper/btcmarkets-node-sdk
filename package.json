@@ -1,5 +1,5 @@
 {
-    "name": "btcmarkets-node-sdk",
+    "name": "cipiripper-btcmarkets-node-sdk",
     "version": "0.1.8",
     "author": {
         "name": "BTC Markets",
@@ -8,7 +8,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/BTCMarkets/btcmarkets-node-sdk"
+        "url": "https://github.com/cipiripper/btcmarkets-node-sdk.git"
     },
     "license": "MIT",
     "main": "dist/index.js",
